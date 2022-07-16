@@ -1,0 +1,63 @@
+variables:
+  MONGO_HOST: '0.0.0.0'
+  MONGO_PORT: '27017'
+  MONGO_DATABASE: 'job-offer-micro-service-db'
+
+#job-offer-service-test-integration:
+#  variables:
+#    NODE_ENV: test
+#    X_AUTH_TOKEN: wbdhAC6uTVn873E2MrU8a
+#  stage: test
+#  image: node:lts-alpine
+#  services:
+#    - mongo:latest
+#  before_script:
+#    - cd job-offer-service
+#  script:
+#    - npm install --quiet
+#    - npm run test
+#  environment:
+#    name: Production
+#  only:
+#    changes:
+#     -job-offer-service/**/*
+
+job-offer-service-build:
+    stage: build
+    image: docker:latest
+    services:
+      - docker:dind
+    before_script:
+          - apk update
+          - apk add --update nodejs npm
+          - cd job-offer-service
+          - cat $JOB_OFFER_SERIVCE_ENV > .env
+          - docker login -u "$GITLAB_REGISTRY_USERNAME" -p "$GITLAB_REGISTRY_PASSWORD" $CI_REGISTRY
+    script:
+        - npm install --quiet
+        - npm run build
+        - docker build --tag $CI_REGISTRY/pa-esgi/backend_microservices/job-offer-service .
+        - docker tag $CI_REGISTRY/pa-esgi/backend_microservices/job-offer-service $CI_REGISTRY/pa-esgi/backend_microservices/job-offer-service:latest
+        - docker push $CI_REGISTRY/pa-esgi/backend_microservices/job-offer-service:latest
+    environment:
+        name: Production
+    only:
+        changes:
+        - job-offer-service/**/*
+
+job-offer-service-deploy:
+  stage: deploy
+  image: lwolf/helm-kubectl-docker:latest
+  environment:
+    name: Production
+  before_script:
+    - mkdir ~/.kube/
+    - echo $KUBECONFIG_OVH | base64 -d > config
+    - mv config ~/.kube/
+    - kubectl get namespace
+    - ls -all
+  script:
+    - helm upgrade --set service.jobOfferService.image=$CI_REGISTRY/pa-esgi/backend_microservices/job-offer-service:latest --install --values=deploy/job-offer-service/values.yaml job-offer-service deploy/job-offer-service
+  only:
+    changes:
+      - job-offer-service/**/*

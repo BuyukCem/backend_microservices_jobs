@@ -1,0 +1,51 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "api-gateway-letsencrypt-prod"
+    acme.cert-manager.io/http01-edit-in-place: "true"
+  name: project-expose-all-service
+  namespace: default
+spec:
+  tls:
+    - hosts:
+        - {{ .Values.service.apihost }}
+      secretName: api-tls
+    - hosts:
+        - {{ .Values.service.fronthost }}
+      secretName: front-tls
+    - hosts:
+        - {{ .Values.service.backoffice }}
+      secretName: backoffice-tls
+  rules:
+    - host: {{ .Values.service.apihost }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: {{ .Values.service.apiGateway.name }}
+                port:
+                  number: {{ .Values.service.apiGateway.port }}
+    - host: {{ .Values.service.fronthost }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: {{ .Values.service.front.name }}
+                port:
+                  number: {{ .Values.service.front.port }}
+    - host: {{ .Values.service.backoffice }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: {{ .Values.service.backOffice.name }}
+                port:
+                  number: {{ .Values.service.backOffice.port }}

@@ -1,0 +1,7 @@
+service:
+  applicationService:
+    name: application-service
+    replicas: 2
+    port: 80
+    targetPort: 3003
+    containerPort: 3003

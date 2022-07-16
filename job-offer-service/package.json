@@ -1,0 +1,51 @@
+{
+  "name": "job-offer-service",
+  "type": "commonjs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "clean": "rimraf build",
+    "dev": "NODE_ENV=dev nodemon --trace-deprecation --exec babel-node src/bin/www",
+    "prod": "NODE_ENV=production npm-run-all build server",
+    "server": "node ./build/bin/www",
+    "build": "npm-run-all clean transpile",
+    "transpile": "babel src --out-dir build",
+    "start": "npm run prod",
+    "test": "NODE_ENV=test jest --detectOpenHandles"
+  },
+  "dependencies": {
+    "axios": "^0.26.1",
+
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^16.0.0",
+    "express": "~4.16.1",
+    "express-fileupload": "^1.1.0",
+    "http-errors": "~1.6.3",
+    "jade": "^1.9.2",
+    "jsonwebtoken": "^8.5.1",
+    "k6": "^0.0.0",
+    "agenda": "^4.2.1",
+    "agendash": "^3.1.0",
+    "mongoose": "^6.2.4",
+    "morgan": "~1.9.1",
+    "npm-run-all": "^4.1.5",
+    "xss-clean": "^0.1.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/node": "^7.14.9",
+    "@babel/plugin-transform-runtime": "^7.16.0",
+    "@babel/preset-env": "^7.15.6",
+    "@jest/globals": "^27.3.1",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "cors": "^2.8.5",
+    "jest": "^27.5.1",
+    "nodemon": "^2.0.15",
+    "rimraf": "^3.0.2",
+    "superagent": "^7.1.1",
+    "supertest": "^6.2.2"
+  }
+}

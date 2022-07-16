@@ -1,0 +1,127 @@
+version: "3.7"
+
+services:
+  api-gateway:
+    image: node:lts
+    working_dir: /app
+    env_file: .env
+    container_name: api-gateway
+    volumes:
+      - ./api-gateway:/app
+    ports:
+      - ${PORT_API_GATEWAY}:3000
+    command: sh -c "npm i && npm run dev"
+    networks:
+      - micro-service
+
+  user-micro-service:
+    image: node:lts
+    working_dir: /app
+    container_name: user-micro-service
+    env_file: .env
+    depends_on:
+      - api-gateway
+      - user-micro-service-db
+    volumes:
+      - ./user-service:/app
+    ports:
+      - ${PORT_USER_SERVICE}:3001
+    command: sh -c "npm i && npm run dev"
+    networks:
+      - micro-service
+
+  user-micro-service-db:
+    image: postgres
+    container_name: user-micro-service-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: user_service
+    ports:
+      - ${PORT_BD_USER_SERVICE}:5432
+    networks:
+      - micro-service
+
+  company-micro-service:
+    image: node:lts
+    working_dir: /app
+    container_name: company-micro-service
+    env_file: .env
+    depends_on:
+      - api-gateway
+      - company-micro-service-db
+    volumes:
+      - ./company-service:/app
+    ports:
+      - ${PORT_COMPANY_SERVICE}:3002
+    command: sh -c "npm i && npm run dev"
+    networks:
+      - micro-service
+
+  company-micro-service-db:
+    image: postgres
+    container_name: company-micro-service-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: company_service
+    ports:
+      - ${PORT_BD_COMPANY_SERVICE}:5432
+    networks:
+      - micro-service
+
+  application-service:
+    image: node:lts
+    working_dir: /app
+    container_name: application-service
+    env_file: .env
+    depends_on:
+      - api-gateway
+    volumes:
+      - ./application-service:/app
+    ports:
+      - ${PORT_APPLICATION_SERVICE}:3003
+    command: sh -c "npm i && npm run dev"
+    networks:
+      - micro-service
+
+  application-micro-service-db:
+    image: postgres
+    container_name: application-service-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: application_service_dev
+    ports:
+      - ${PORT_BD_APPLICATION_SERVICE}:5432
+    networks:
+      - micro-service
+
+  job-offer-micro-service:
+    image: node:lts
+    working_dir: /app
+    env_file: .env
+    container_name: job-offer-service
+    volumes:
+      - ./job-offer-service:/app
+    ports:
+      - ${PORT_JOB_OFFER_SERVICE}:3005
+    command: sh -c "npm install && npm run dev"
+    networks:
+      - micro-service
+
+  job-offer-micro-service-db:
+    image: mongo
+    container_name: job-offer-micro-service-db
+    ports:
+      - ${JOB_OFFER_SERVICE_DB}:27017
+    networks:
+      - micro-service
+    environment:
+      - MONGO_INITDB_DATABASE=job_offer_service
+    volumes:
+      - ./job-offer-service/mongo_db_volumes:/usr/local/mongo_db_volumes
+
+networks:
+  micro-service:
+    driver: bridge

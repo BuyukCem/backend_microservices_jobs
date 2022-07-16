@@ -1,0 +1,7 @@
+service:
+  userService:
+    name: user-service
+    replicas: 2
+    port: 80
+    targetPort: 3001
+    containerPort: 3001

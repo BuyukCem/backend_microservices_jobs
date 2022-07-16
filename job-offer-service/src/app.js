@@ -1,0 +1,55 @@
+const createError = require('http-errors');
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const cors = require('cors');
+const xss = require('xss-clean')
+require('dotenv').config()
+const {connect} = require('./config/mongo_db.config');
+const fileUpload = require('express-fileupload');
+const jobOfferRouter = require('./routes/job-offer-routes')
+const sectorRouter = require('./routes/sector-routes')
+const likeRouter = require('./routes/like-routes')
+const alertRouter = require('./routes/alert-offer-route')
+const {agendaInit} = require('./config/agenda')
+const app = express();
+
+
+connect()
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+app.use(cookieParser());
+app.use(cors());
+app.use(xss());
+app.use(fileUpload({
+    createParentPath: true
+}));
+
+agendaInit(app)
+
+app.use('/', sectorRouter);
+app.use('/', likeRouter);
+app.use('/', alertRouter)
+app.use('/jobs_offers', jobOfferRouter);
+
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+    next(createError(404));
+});
+
+
+
+// error handler
+app.use(function (err, req, res) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    // render the error page
+    res.status(err.status || 500);
+    //res.render('error');
+});
+
+module.exports = app;

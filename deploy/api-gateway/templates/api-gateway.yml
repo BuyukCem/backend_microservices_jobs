@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.service.apiGateway.name }}"
+  labels:
+    app: "{{ .Values.service.apiGateway.name }}"
+spec:
+  replicas: {{ .Values.service.apiGateway.replicas }}
+  selector:
+    matchLabels:
+      app: "{{ .Values.service.apiGateway.name }}"
+  template:
+    metadata:
+      name: "{{ .Values.service.apiGateway.name }}"
+      labels:
+        app: "{{ .Values.service.apiGateway.name }}"
+    spec:
+      containers:
+        - name: "{{ .Values.service.apiGateway.name }}"
+          image: "{{ .Values.service.apiGateway.image }}"
+          ports:
+            - containerPort: {{ .Values.service.apiGateway.containerPort }}
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Values.service.apiGateway.name }}"
+  labels:
+    app: "{{ .Values.service.apiGateway.name }}"
+spec:
+  selector:
+    app: "{{ .Values.service.apiGateway.name }}"
+  ports:
+    - protocol: TCP
+      name: "{{ .Values.service.apiGateway.name }}"
+      port: {{ .Values.service.apiGateway.port }}
+      targetPort: {{ .Values.service.apiGateway.targetPort }}
