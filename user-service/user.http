@@ -1,0 +1,93 @@
+###
+# curl -X 'POST'
+#  'http://localhost:3000/signup'
+#  -H 'accept: application/json'
+#  -H 'Content-Type: application/x-www-form-urlencoded'
+#  -d 'firstName=John&lastName=Doe&email=Johon.Doe%40mail.com&password=testtest'
+POST http://localhost:3000/signup
+accept: application/json
+Content-Type: application/x-www-form-urlencoded
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "John.Doe1@mail.com",
+  "password": "test"
+}
+###
+
+
+# curl -X 'POST'
+#  'http://localhost:3000/login'
+#  -H 'accept: application/json'
+#  -H 'Content-Type: application/x-www-form-urlencoded'
+#  -d 'email=testes%40testes.com&password=testessfsfs'
+POST http://localhost:3000/login
+accept: application/json
+Content-Type: application/x-www-form-urlencoded
+{
+  "email": "John.Doe@mail.com",
+  "password": "test"
+}
+###
+
+# curl -X 'POST'
+#  'http://localhost:3000/users'
+#  -H 'accept: application/json'
+#  -H 'Content-Type: application/x-www-form-urlencoded'
+GET http://localhost:3000/users
+accept: application/json
+Content-Type: application/x-www-form-urlencoded
+Authorization:  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ0ZXN0ZXNAdGVzdGVzLmNvbSIsImV4cCI6MTYzNjI5Nzc2OTY1MiwiaWF0IjoxNjM2Mjk3MTY0fQ.SVFBXF1sJ-6Sk0CULR82GR1GeWYLqlZYkBldSy8ik78
+###
+
+# curl --location --request GET 'http://localhost:3000/user?id=1'
+#--header 'Authorization: XXXXX'
+GET http://localhost:3000/users/3
+accept: application/json
+Content-Type: application/x-www-form-urlencoded
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ0ZXN0ZXNAdGVzdGVzLmNvbSIsImV4cCI6MTYzNjI5Nzc2OTY1MiwiaWF0IjoxNjM2Mjk3MTY0fQ.SVFBXF1sJ-6Sk0CULR82GR1GeWYLqlZYkBldSy8ik78
+###
+
+# curl --location --request DELETE 'localhost:3000/users/1'
+#--header 'Content-Type: application/json'
+#--header 'Authorization: XXXXX'
+DELETE localhost:3000/users/3
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ0ZXN0ZXNAdGVzdGVzLmNvbSIsImV4cCI6MTYzNjI5Nzc2OTY1MiwiaWF0IjoxNjM2Mjk3MTY0fQ.SVFBXF1sJ-6Sk0CULR82GR1GeWYLqlZYkBldSy8ik78
+###
+
+
+
+# curl --request POST
+#  --url https://api.sendgrid.com/v3/mail/send
+#  --header "Authorization: Bearer $SENDGRID_API_KEY"
+#  --header 'Content-Type: application/json'
+#  --data '{"personalizations": [{"to": [{"email": "test@example.com"}]}],"from": {"email": "test@example.com"},"subject": "Sending with SendGrid is Fun","content": [{"type": "text/plain", "value": "and easy to do anywhere, even with cURL"}]}'
+POST https://api.sendgrid.com/v3/mail/send
+Authorization: Bearer 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
+Content-Type: application/json
+
+{
+  "personalizations": [
+    {
+      "to": [
+        {
+          "email": "test@example.com"
+        }
+      ]
+    }
+  ],
+  "from": {
+    "email": "test@example.com"
+  },
+  "subject": "Sending with SendGrid is Fun",
+  "content": [
+    {
+      "type": "text/plain",
+      "value": "and easy to do anywhere, even with cURL"
+    }
+  ]
+}
+
+###
+

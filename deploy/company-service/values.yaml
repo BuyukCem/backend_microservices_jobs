@@ -1,0 +1,7 @@
+service:
+  companyService:
+    name: company-service
+    replicas: 2
+    port: 80
+    targetPort: 3002
+    containerPort: 3002

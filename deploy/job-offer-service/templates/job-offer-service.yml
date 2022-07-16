@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.service.jobOfferService.name }}"
+  labels:
+    app: "{{ .Values.service.jobOfferService.name }}"
+spec:
+  replicas: {{ .Values.service.jobOfferService.replicas }}
+  selector:
+    matchLabels:
+      app: "{{ .Values.service.jobOfferService.name }}"
+  template:
+    metadata:
+      name: "{{ .Values.service.jobOfferService.name }}"
+      labels:
+        app: "{{ .Values.service.jobOfferService.name }}"
+    spec:
+      containers:
+        - name: "{{ .Values.service.jobOfferService.name }}"
+          image: "{{ .Values.service.jobOfferService.image }}"
+          ports:
+            - containerPort: {{ .Values.service.jobOfferService.containerPort }}
+              name: http
+          env:
+            - name: PORT
+              value: "{{ .Values.service.jobOfferService.containerPort }}"
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Values.service.jobOfferService.name }}"
+spec:
+  selector:
+    app: "{{ .Values.service.jobOfferService.name }}"
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.jobOfferService.port }}
+      targetPort: {{ .Values.service.jobOfferService.targetPort }}

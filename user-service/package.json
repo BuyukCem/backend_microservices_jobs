@@ -1,0 +1,71 @@
+{
+  "name": "user-microservice-api",
+  "description": "user-microservice-api",
+  "version": "1.0.10",
+  "private": false,
+  "license": "MIT",
+  "bin": "src/bin/www.js",
+  "main": "src/app.js",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/pa-esgi/backend_microservices"
+  },
+  "scripts": {
+    "clean": "rimraf build",
+    "dev": "NODE_ENV=dev nodemon --trace-deprecation --exec babel-node src/bin/www",
+    "prod": "NODE_ENV=production npm-run-all build server",
+    "server": "node ./build/bin/www",
+    "build": "npm-run-all clean transpile",
+    "transpile": "babel src --out-dir build",
+    "start": "npm run dev",
+    "test": "NODE_ENV=test jest --testEnvironment=node --ci src/tests/routes.test.js"
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^6.5.0",
+    "aws-sdk": "^2.809.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "debug": "^4.3.2",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "npm-run-all": "^4.1.5",
+    "pg": "^8.7.1",
+    "pgtools": "^0.1.1",
+    "sequelize": "^6.9.0",
+    "swagger-ui-express": "^4.1.6",
+    "xss-clean": "^0.1.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/node": "^7.14.9",
+    "@babel/plugin-transform-runtime": "^7.16.0",
+    "@babel/preset-env": "^7.15.6",
+    "@jest/globals": "^27.3.1",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "cors": "^2.8.5",
+    "jest": "^27.2.0",
+    "nodemon": "^2.0.12",
+    "rimraf": "^3.0.2",
+    "supertest": "^6.1.6"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "modulePaths": [
+      "src"
+    ],
+    "setupFiles": [
+      "dotenv/config"
+    ]
+  }
+}

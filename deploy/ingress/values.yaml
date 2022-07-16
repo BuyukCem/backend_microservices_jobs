@@ -1,0 +1,22 @@
+service:
+  apihost: api.mtmjobs.online
+  fronthost: site.mtmjobs.online
+  backoffice: admin.mtmjobs.online
+
+  front:
+    name: frontend-web-clusterip
+    port: 80
+    targetPort: 80
+    containerPort: 80
+
+  apiGateway:
+    name: api-gateway
+    port: 80
+    targetPort: 8080
+    containerPort: 8080
+
+  backOffice:
+    name: back-office-clusterip
+    port: 80
+    targetPort: 80
+    containerPort: 80

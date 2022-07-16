@@ -1,0 +1,15 @@
+stages:
+  - test
+  - build
+  - deploy
+
+services:
+  - postgres
+  - mongo:latest
+
+include:
+  - local: '/gitlab-ci/.gitlab-ci-user-service.yml'
+  - local: '/gitlab-ci/.gitlab-ci-api-gateway.yml'
+  - local: '/gitlab-ci/.gitlab-ci-company-service.yml'
+  - local: '/gitlab-ci/.gitlab-ci-application-service.yml'
+  - local: '/gitlab-ci/.gitlab-ci-job-offer-service.yml'

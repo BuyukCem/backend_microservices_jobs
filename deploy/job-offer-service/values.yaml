@@ -1,0 +1,7 @@
+service:
+  jobOfferService:
+    name: job-offer-service
+    replicas: 2
+    port: 80
+    targetPort: 3005
+    containerPort: 3005

@@ -1,0 +1,20 @@
+const auth = require('../middlewares/authenticate.middleware')
+const applicationController = require('../controllers/application.controller')
+
+module.exports = (app) => {
+    app.route('/application')
+        .post(auth.authenticate, applicationController.createApplication)
+    app.route('/applicationStats')
+        .get(auth.authenticate, applicationController.getApplicationStats)
+    app.route('/applicationStats/:id')
+        .get(auth.authenticate, applicationController.getApplicationStatsByCompany)
+    app.route('/application/:id')
+        .get(auth.authenticate, applicationController.getApplication)
+        .put(auth.authenticate, applicationController.updateApplication)
+    app.route('/getUserApplications/:id')
+        .get(auth.authenticate, applicationController.getUserApplications)
+    app.route('/getApplicationsForCompany')
+        .post(auth.authenticate, applicationController.getApplicationsForCompany)
+    app.route('/application/jobs/:id')
+        .get(auth.authenticate, applicationController.getJobApplications)
+}

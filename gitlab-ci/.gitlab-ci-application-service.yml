@@ -1,0 +1,46 @@
+variables:
+  POSTGRES_DB: application_test
+  POSTGRES_USER: root
+  POSTGRES_PASSWORD: example
+  POSTGRES_PORT: 5432
+  POSTGRES_HOST: postgres
+
+application-service-build:
+    stage: build
+    image: docker:latest
+    services:
+      - docker:dind
+    before_script:
+          - apk update
+          - apk add --update nodejs npm
+          - cd application-service
+          - cat $APPLICATION_SERIVCE_ENV > .env
+          - docker login -u "$GITLAB_REGISTRY_USERNAME" -p "$GITLAB_REGISTRY_PASSWORD" $CI_REGISTRY
+    script:
+        - npm install --quiet
+        - npm run build
+        - docker build --tag $CI_REGISTRY/pa-esgi/backend_microservices/application-service .
+        - docker tag $CI_REGISTRY/pa-esgi/backend_microservices/application-service $CI_REGISTRY/pa-esgi/backend_microservices/application-service:latest
+        - docker push $CI_REGISTRY/pa-esgi/backend_microservices/application-service:latest
+    environment:
+        name: Production
+    only:
+        changes:
+        - application-service/**/*
+
+application-service-deploy:
+  stage: deploy
+  image: lwolf/helm-kubectl-docker:latest
+  environment:
+    name: Production
+  before_script:
+    - mkdir ~/.kube/
+    - echo $KUBECONFIG_OVH | base64 -d > config
+    - mv config ~/.kube/
+    - kubectl get namespace
+    - ls -all
+  script:
+    - helm upgrade --set service.applicationService.image=$CI_REGISTRY/pa-esgi/backend_microservices/application-service:latest --install --values=deploy/application-service/values.yaml application-service deploy/application-service
+  only:
+    changes:
+      - application-service/**/*

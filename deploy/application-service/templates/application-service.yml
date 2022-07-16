@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.service.applicationService.name }}"
+  labels:
+    app: "{{ .Values.service.applicationService.name }}"
+spec:
+  replicas: {{ .Values.service.applicationService.replicas }}
+  selector:
+    matchLabels:
+      app: "{{ .Values.service.applicationService.name }}"
+  template:
+    metadata:
+      name: "{{ .Values.service.applicationService.name }}"
+      labels:
+        app: "{{ .Values.service.applicationService.name }}"
+    spec:
+      containers:
+        - name: "{{ .Values.service.applicationService.name }}"
+          image: "{{ .Values.service.applicationService.image }}"
+          ports:
+            - containerPort: {{ .Values.service.applicationService.containerPort }}
+              name: http
+          env:
+            - name: PORT
+              value: "{{ .Values.service.applicationService.containerPort }}"
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Values.service.applicationService.name }}"
+spec:
+  selector:
+    app: "{{ .Values.service.applicationService.name }}"
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.applicationService.port }}
+      targetPort: {{ .Values.service.applicationService.targetPort }}

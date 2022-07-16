@@ -1,0 +1,7 @@
+service:
+  apiGateway:
+    name: api-gateway
+    replicas: 2
+    port: 80
+    targetPort: 8080
+    containerPort: 8080
