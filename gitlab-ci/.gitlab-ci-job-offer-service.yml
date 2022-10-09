@@ -3,25 +3,6 @@ variables:
   MONGO_PORT: '27017'
   MONGO_DATABASE: 'job-offer-micro-service-db'
 
-#job-offer-service-test-integration:
-#  variables:
-#    NODE_ENV: test
-#    X_AUTH_TOKEN: wbdhAC6uTVn873E2MrU8a
-#  stage: test
-#  image: node:lts-alpine
-#  services:
-#    - mongo:latest
-#  before_script:
-#    - cd job-offer-service
-#  script:
-#    - npm install --quiet
-#    - npm run test
-#  environment:
-#    name: Production
-#  only:
-#    changes:
-#     -job-offer-service/**/*
-
 job-offer-service-build:
     stage: build
     image: docker:latest

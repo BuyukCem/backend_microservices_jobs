@@ -5,25 +5,6 @@ variables:
   POSTGRES_PORT: 5432
   POSTGRES_HOST: postgres
 
-#user-service-test-integration:
-#  variables:
-#    NODE_ENV: test
-#    X_AUTH_TOKEN: wbdhAC6uTVn873E2MrU8a
-#  stage: test
-#  image: node:lts-alpine
-#  services:
-#    - postgres
-#  before_script:
-#    - cd user-service
-#  script:
-#    - npm install --quiet
-#    - npm run test
-#  environment:
-#    name: Production
-#  only:
-#    changes:
-#      - user-service/**/*
-
 user-service-build:
     stage: build
     image: docker:latest
